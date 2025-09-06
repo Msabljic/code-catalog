@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.appName }}
+    app.kubernetes.io/instance: {{ .Values.appName }}
+    app.kubernetes.io/name: {{ .Values.appName }}
+  name: {{ .Values.appName }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}
+        app.kubernetes.io/name: {{ .Values.appName }}
+        app.kubernetes.io/instance: {{ .Values.appName }}
+    spec:
+      containers:
+      - image: lscr.io/linuxserver/plex
+        imagePullPolicy: Always
+        name: {{ .Values.appName }}
+        {{- with .Values.resources }}
+        resources:
+{{ toYaml . | indent 12 }}
+        {{- end }}
+        ports:
+        - containerPort: 32400
+          name: web
+          protocol: TCP
+        env:
+        - name: NVIDIA_VISIBLE_DEVICES
+          value: "all"
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          value: all
+        - name: TZ
+          value: {{ .Values.timezone }}
+        - name: PLEX_CLAIM
+          value: {{ .Values.plexClaim }}
+        volumeMounts:
+        - mountPath: "/config"
+          readOnly: false
+          name: smb
+          subPath: Movie/plex_config
+        - mountPath: "/tv"
+          readOnly: true
+          name: smb
+          subPath: Movie/Movies
+        - mountPath: "/movies"
+          readOnly: true
+          name: smb
+          subPath: Movie/Shows
+      volumes:
+        - name: smb
+          persistentVolumeClaim:
+            claimName: {{ .Values.configmap.persistentVolumeClaim.claimName }}
