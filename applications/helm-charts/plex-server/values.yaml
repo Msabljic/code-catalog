@@ -1,0 +1,19 @@
+appName: test-plex
+namespace: test-helm
+timezone: America/Toronto
+plexClaim: claim-123456
+configmap:
+  PersistentVolume:
+    name: pv-plex-smb
+    capacity:
+      storage: 100Gi
+  csi:
+    volumeAttributes:
+      source: "//127.0.0.1"
+    nodeStageSecretRef:
+      name: somecreds
+      namespace: default
+  persistentVolumeClaim:
+    claimName: pvc-plex-smb
+resources: {}
+volumeMounts: []

@@ -1,0 +1,51 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.appName }}
+    app.kubernetes.io/instance: {{ .Values.appName }}
+    app.kubernetes.io/name: {{ .Values.appName }}
+  name: {{ .Values.appName }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}
+        app.kubernetes.io/name: {{ .Values.appName }}
+        app.kubernetes.io/instance: {{ .Values.appName }}
+    spec:
+      containers:
+      - image: lscr.io/linuxserver/plex
+        imagePullPolicy: Always
+        name: {{ .Values.appName }}
+        {{- with .Values.resources }}
+        resources:
+{{ toYaml . | indent 12 }}
+        {{- end }}
+        ports:
+        - containerPort: 32400
+          name: web
+          protocol: TCP
+        env:
+        - name: NVIDIA_VISIBLE_DEVICES
+          value: "all"
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          value: all
+        - name: TZ
+          value: {{ .Values.timezone }}
+        - name: PLEX_CLAIM
+          value: {{ .Values.plexClaim }}
+        {{- with .Values.volumeMounts }}
+        volumeMounts:
+{{ toYaml . | indent 12 }}
+        {{- end }}
+      volumes:
+        - name: smb
+          persistentVolumeClaim:
+            claimName: {{ .Values.configmap.persistentVolumeClaim.claimName }}
