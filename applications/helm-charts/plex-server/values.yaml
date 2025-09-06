@@ -16,3 +16,4 @@ configmap:
   persistentVolumeClaim:
     claimName: pvc-plex-smb
 resources: {}
+volumeMounts: []

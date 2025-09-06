@@ -36,4 +36,17 @@ configmap:
 resource: #If you have a nvidia gpu 
   limits:
     nvidia.com/gpu: 1
+volumeMounts:
+  - mountPath: "/config"
+    readOnly: false
+    name: smb
+    subPath: /plex_config
+  - mountPath: "/tv"
+    readOnly: true
+    name: smb
+    subPath: value #SMB show location
+  - mountPath: "/movies"
+    readOnly: true
+    name: smb
+    subPath: value #SMB movie location
 ```

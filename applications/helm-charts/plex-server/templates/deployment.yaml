@@ -41,19 +41,10 @@ spec:
           value: {{ .Values.timezone }}
         - name: PLEX_CLAIM
           value: {{ .Values.plexClaim }}
+        {{- with .Values.volumeMounts }}
         volumeMounts:
-        - mountPath: "/config"
-          readOnly: false
-          name: smb
-          subPath: Movie/plex_config
-        - mountPath: "/tv"
-          readOnly: true
-          name: smb
-          subPath: Movie/Movies
-        - mountPath: "/movies"
-          readOnly: true
-          name: smb
-          subPath: Movie/Shows
+{{ toYaml . | indent 12 }}
+        {{- end }}
       volumes:
         - name: smb
           persistentVolumeClaim:
