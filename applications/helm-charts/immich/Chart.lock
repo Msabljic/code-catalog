@@ -1,0 +1,9 @@
+dependencies:
+- name: cloudnative-pg
+  repository: https://cloudnative-pg.github.io/charts
+  version: 0.26.0
+- name: immich
+  repository: https://immich-app.github.io/immich-charts
+  version: 0.9.3
+digest: sha256:336f2273a94e3c0bbeccc134edc843f89c4f51bcdb211d4f95eeefbe1803dc42
+generated: "2025-09-09T19:47:38.213888306-04:00"
