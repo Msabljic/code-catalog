@@ -20,8 +20,11 @@ spec:
         app.kubernetes.io/name: {{ .Values.appName }}
         app.kubernetes.io/instance: {{ .Values.appName }}
     spec:
+      runtimeClassName: nvidia
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       containers:
-      - image: lscr.io/linuxserver/plex
+      - image: plexinc/pms-docker:latest
         imagePullPolicy: Always
         name: {{ .Values.appName }}
         {{- with .Values.resources }}
@@ -33,10 +36,16 @@ spec:
           name: web
           protocol: TCP
         env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
         - name: NVIDIA_VISIBLE_DEVICES
           value: "all"
         - name: NVIDIA_DRIVER_CAPABILITIES
-          value: all
+          value: "all"
+        - name: VERSION
+          value: "docker"
         - name: TZ
           value: {{ .Values.timezone }}
         - name: PLEX_CLAIM
