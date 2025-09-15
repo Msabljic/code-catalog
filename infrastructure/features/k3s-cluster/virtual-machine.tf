@@ -10,10 +10,10 @@ ${var.base_config.default_username}
 
 ${random_password.this[each.key].result}
 EOT
-  #   tags        = module.naming.list_of_tags
-  node_name = each.value.server_node
-  vm_id     = each.value.vm_id
-  started   = true
+  tags        = concat(["k3s", "${each.value.server_node}"], var.base_config.tags)
+  node_name   = each.value.server_node
+  vm_id       = each.value.vm_id
+  started     = var.base_config.started
 
   cpu {
     cores = each.value.cpu_cores

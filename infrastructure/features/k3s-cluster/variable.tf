@@ -1,12 +1,12 @@
 variable "base_config" {
   type = object({
-    master_nodes       = optional(number, 1)
+    master_nodes       = optional(number, 3)
     master_name_prefix = optional(string, "k3s-master")
-    master_cpu_cores   = optional(number, 2)
+    master_cpu_cores   = optional(number, 1)
     master_memory      = optional(number, 4096)
-    worker_nodes       = optional(number, 1)
+    worker_nodes       = optional(number, 3)
     worker_name_prefix = optional(string, "k3s-worker")
-    worker_cpu_cores   = optional(number, 3)
+    worker_cpu_cores   = optional(number, 1)
     worker_memory      = optional(number, 1024)
     proxmox_nodes      = list(string)
     network            = optional(string, "vmbr0")
@@ -17,6 +17,8 @@ variable "base_config" {
     password_length    = optional(number, 16)
     default_username   = optional(string, "k3s-build-admin")
     storage            = optional(string, "lvm")
+    tags               = optional(list(string), [])
+    started            = optional(bool, false)
   })
 }
 
